@@ -7,7 +7,7 @@ from codecs import open, decode
 class WordSegmentation:
   # init Trie class
   def __init__(self, text):
-    self.text = text.decode('utf-8')
+    self.text = text
     self.model = trie.Trie()
     self.model.load_from_pickle("train_data")
     # self.result = []
@@ -23,7 +23,7 @@ class WordSegmentation:
     result = ""
     while (index < len(self.text)):
       ch = self.text[index]
-      ch = ch.encode('utf-8')
+      ch = ch
       if self.isNumber(ch):
         result += self.text[index]
         index += 1
@@ -38,7 +38,7 @@ class WordSegmentation:
     result = ""
     while (index < len(self.text)):
       ch = self.text[index]
-      ch = ch.encode('utf-8')
+      ch = ch
       if (self.isEnglish(ch) or self.isNumber(ch)):
         result += ch;
         index += 1
@@ -52,7 +52,7 @@ class WordSegmentation:
 
     while (index < len(self.text)):
       ch = self.text[index]
-      ch = ch.encode('utf-8')
+      ch = ch
       word += ch
       if self.model.searchWordPrefix(word):
         if self.model.searchWord(word):
@@ -69,52 +69,31 @@ class WordSegmentation:
   def check_words(self):
     while(self.startIndex < len(self.text)):
       ch = self.text[self.startIndex]
-      ch = ch.encode('utf-8')
+      ch = ch
       word = ''
 
       if self.isNumber(ch):
-        word = self.parseNumber(self.startIndex).encode('utf-8')
+        word = self.parseNumber(self.startIndex)
       elif self.isEnglish(ch):
-        word = self.parseEnglish(self.startIndex).encode('utf-8')
+        word = self.parseEnglish(self.startIndex)
       else:
         word = self.parseTrie(self.startIndex)
 
-      length = len(word.decode('utf-8'))
+      length = len(word)
       if length == 0:
-        self.result_all.append(ch.decode('utf-8'))
+        self.result_all.append(ch)
         self.startIndex += 1
         continue
 
       result = {}
       if self.model.searchWord(word) or self.isNumber(ch) or self.isEnglish(ch):
-        self.result_all.append()
-        result["text"] = word.decode('utf-8')
+        self.result_all.append(word)
+        result = word
       else:
-        result["text"] = word.decode('utf-8')
+        result = word
 
-      self.result_all.append(result)
+      # self.result_all.append(result)
       self.startIndex += length
 
-    # # write to file
-    # with open('result/segment_word.txt', "w", encoding="utf-8") as f:
-    #   for word in self.result:
-    #     f.write(word + "\n")
-    # with open('result/segment_not_word.txt', "w", encoding="utf-8") as f:
-    #   for word in self.leftover:
-    #     f.write(word + "\n")
-
-  def show(self):
-    print('Text: ' + self.text)
-    print('After check : [' + ', '.join(self.result_all) + ']')
-
-
-# kh_text = "អ្នកចេះនិយាយភាសាខ្មែរទេ?"
-# kh_text = "ចំណេះ​ដឹង​វិទ្យាសាស្ត្រ​ជា​ចំណុច​គាំទ្រ​ដ៏​សំខាន់​មួយ​ក្នុង​ការ​អភិវឌ្ឍ​សេដ្ឋកិច្ច​សង្គម។ "
-# kh_text = "ដឹង​វិទ្យាសាស្ត្រ​ជា​ចំណុច​គាំទ្រ​ដ៏​សំខាន់​មួយ​ក្នុង​ការ​អភិវឌ្ឍ​សេដ្ឋកិច្ច​សង្គម។"
-# kh_text = "កំពុងលុបការឃោសនារបស់ពួកជ្រុលនិយមលឿនជាងបច្ចុប្បន្ន បើមិនដូច្នេះទេ"
-# kh_text = "សហភាពអឺរ៉ុបបានផ្ដល់ពេល៣ខែឲ្"
-kh_text = "ខាងក្រុមហ៊ុនរបស់យើងខ្ញុំត្រូវការជ្រើសរើសនិសិ្សតកម្ពុជាយើងដែលកំពុងរៀនផ្នែកពត័មានវិទ្យានិងផ្នែកទូរគមនាគមន៍"
-
-word_segment = WordSegmentation(kh_text)
-word_segment.check_words()
-word_segment.show()
+  def tokenizer(self):
+    return self.result_all
