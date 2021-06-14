@@ -7,7 +7,7 @@ from codecs import open, decode
 model = trie.Trie()
 # model.load_from_pickle("data/trained")
 
-input_file_path = "data/sea.txt"
+input_file_path = "KhmerWordSegmentation/data/sea.txt"
 with open(input_file_path, "r") as f:
   words = f.read().split("\n")
 print("Training start")
